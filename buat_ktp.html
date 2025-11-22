@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KTP FC - Anezz</title>
+  <style>
+    :root{--ktp-blue:#c1d8f0;--black:#000}
+    *{box-sizing:border-box;font-family:Arial;margin:0;padding:0}
+    body{background:#f2f2f2;display:flex;justify-content:center;align-items:flex-start;padding:1rem}
+    .card{width:100%;max-width:420px;background:#fff;border-radius:12px;box-shadow:0 8px 25px rgba(0,0,0,.15);padding:2rem;margin-bottom:1rem}
+    h2{text-align:center;margin-bottom:1rem;color:#00552e}
+    label{font-size:.8rem;font-weight:700;margin-top:.8rem;display:block}
+    input,select{width:100%;padding:.5rem;margin-top:.2rem;border:1px solid #999;border-radius:4px;font-size:.9rem}
+    button{width:100%;margin-top:1rem;padding:.6rem;border:none;border-radius:6px;background:#00552e;color:#fff;font-weight:700;cursor:pointer}
+    #page1,#page2{display:none}
+    #page1.active,#page2.active{display:block}
+
+    /* ---------- KTP ---------- */
+    #ktpResult{display:none;flex-direction:column;align-items:center;margin-top:1rem}
+    #ktpCard{width:86mm;height:54mm;background:var(--ktp-blue);border:1px solid var(--black);font-size:8.5px;color:var(--black);padding:4mm}
+    #ktpCard .head{display:flex;gap:3mm;align-items:flex-start}
+    #ktpCard .garuda{width:32px}
+    #ktpCard .kab{font-weight:700;font-size:9px;line-height:1.1}
+    #ktpCard .kab span{font-size:7px;font-weight:400}
+    #ktpCard .main-row{display:flex;margin-top:2mm;gap:3mm}
+    #ktpCard .col1{flex:1;display:flex;flex-direction:column}
+    #ktpCard .row{display:flex}
+    #ktpCard .lbl{width:28mm;font-weight:700}
+    #ktpCard .val{flex:1}
+    #ktpCard .photo-wrap{width:28mm;height:35mm;position:relative;border:1px solid #999;background:#ddd}
+    #ktpCard .photo{width:100%;height:100%;object-fit:cover}
+    #ktpCard .goldar{position:absolute;top:2px;right:2px;background:#fff;border:1px solid #000;padding:0 2px;font-size:7px;font-weight:700}
+    #ktpCard .bott{text-align:center;font-size:6px;margin-top:1mm;color:#555}
+    .btn-group{display:flex;gap:.5rem;margin-top:.8rem}
+    .btn-group button{flex:1}
+    .row-h{display:flex;gap:.5rem}
+    .row-h input{flex:1}
+  </style>
+</head>
+<body>
+
+  <!-- PAGE 1 -->
+  <div id="page1" class="card active">
+    <h2>Username Roblox</h2>
+    <input id="robloxUser" placeholder="BuildermanGaming123" maxlength="20"/>
+    <button onclick="goPage2()">Lanjut</button>
+  </div>
+
+  <!-- PAGE 2 -->
+  <div id="page2" class="card">
+    <h2>Isian KTP FC</h2>
+    <label>NIK (16 digit)</label>
+    <div class="row-h">
+      <input id="nik" placeholder="5312010203910001" maxlength="16"/>
+      <button onclick="randomNIK()" style="flex:0 0 90px;margin-top:0">Random</button>
+    </div>
+
+    <label>Nama</label>
+    <input id="nama" placeholder="Muhammad Bahnezi Zulfikar"/>
+
+    <label>Tmp/Tgl Lahir</label>
+    <div class="row-h">
+      <input id="tmpt" placeholder="Bogor"/>
+      <input id="tgllhr" type="date"/>
+    </div>
+
+    <label>Jenis Kelamin</label>
+    <select id="jk"><option>LAKI-LAKI</option><option>PEREMPUAN</option></select>
+
+    <label>Alamat</label>
+    <input id="alamat" placeholder="Jl. PGRI 1 Blok F 23"/>
+
+    <div class="row-h">
+      <div style="flex:1"><label>RT/RW</label><input id="rtrw" placeholder="01/02"/></div>
+      <div style="flex:1"><label>Kel/Desa</label><input id="keldesa" placeholder="Beteng"/></div>
+    </div>
+
+    <label>Kecamatan</label>
+    <input id="kec" placeholder="Ciampea"/>
+
+    <div class="row-h">
+      <div style="flex:1">
+        <label>Agama</label>
+        <select id="agama">
+          <option>Islam</option><option>Kristen</option>
+          <option>Katolik</option><option>Hindu</option>
+          <option>Buddha</option><option>Konghucu</option>
+        </select>
+      </div>
+      <div style="flex:1">
+        <label>Status</label>
+        <select id="status">
+          <option>Belum Kawin</option><option>Kawin</option>
+          <option>Cerai Hidup</option><option>Cerai Mati</option>
+        </select>
+      </div>
+    </div>
+
+    <label>Pekerjaan</label>
+    <input id="kerja" placeholder="Kantor"/>
+
+    <div class="row-h">
+      <div style="flex:1"><label>Kewarganegaraan</label><select id="kwn"><option>WNI</option><option>WNA</option></select></div>
+      <div style="flex:1"><label>Berlaku Hingga</label><select id="berlaku"><option>SEUMUR HIDUP</option><option>5 TAHUN</option></select></div>
+    </div>
+
+    <label>Gol. Darah</label>
+    <select id="goldar"><option>-</option><option>A</option><option>B</option><option>AB</option><option>O</option></select>
+
+    <label>Foto Wajah</label>
+    <input type="file" id="foto" accept="image/*"/>
+
+    <button onclick="generateKTP()">Buat KTP</button>
+  </div>
+
+  <!-- KTP RESULT -->
+  <div id="ktpResult">
+    <div id="ktpCard">
+      <div class="head">
+        <img class="garuda" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Coat_of_arms_of_Indonesia.svg/100px-Coat_of_arms_of_Indonesia.svg.png"/>
+        <div class="kab">PROVINSI NUSA TENGGARA TIMUR<br><span>KABUPATEN MANGGARAI BARAT</span></div>
+      </div>
+
+      <div class="main-row">
+        <div class="col1">
+          <div class="row"><div class="lbl">NIK</div><div class="val" id="outNIK">-</div></div>
+          <div class="row"><div class="lbl">Nama</div><div class="val" id="outNama">-</div></div>
+          <div class="row"><div class="lbl">Tmp/Tgl Lahir</div><div class="val" id="outLahir">-</div></div>
+          <div class="row"><div class="lbl">Jenis Kelamin</div><div class="val" id="outJK">-</div></div>
+          <div class="row"><div class="lbl">Alamat</div><div class="val" id="outAlamat">-</div></div>
+          <div class="row"><div class="lbl">RT/RW</div><div class="val" id="outRT">-</div></div>
+          <div class="row"><div class="lbl">Kel/Desa</div><div class="val" id="outKel">-</div></div>
+          <div class="row"><div class="lbl">Kecamatan</div><div class="val" id="outKec">-</div></div>
+          <div class="row"><div class="lbl">Agama</div><div class="val" id="outAgama">-</div></div>
+          <div class="row"><div class="lbl">Status Perkawinan</div><div class="val" id="outStatus">-</div></div>
+          <div class="row"><div class="lbl">Pekerjaan</div><div class="val" id="outKerja">-</div></div>
+          <div class="row"><div class="lbl">Kewarganegaraan</div><div class="val" id="outKWN">-</div></div>
+          <div class="row"><div class="lbl">Berlaku Hingga</div><div class="val" id="outBerlaku">-</div></div>
+        </div>
+
+        <div class="photo-wrap">
+          <img id="outFoto" class="photo"/>
+          <div class="goldar" id="outGol">-</div>
+        </div>
+      </div>
+
+      <div class="bott">BUATAN KTP - <span id="thn"></span>-<span id="bln"></span>-<span id="tgl"></span> | anezz</div>
+    </div>
+
+    <div class="btn-group">
+      <button onclick="window.print()">Download</button>
+    </div>
+  </div>
+
+<script>
+const d = new Date();
+document.getElementById('thn').textContent = d.getFullYear();
+document.getElementById('bln').textContent = String(d.getMonth()+1).padStart(2,'0');
+document.getElementById('tgl').textContent = String(d.getDate()).padStart(2,'0');
+
+function goPage2(){
+  const u = document.getElementById('robloxUser').value.trim();
+  if(!u) return alert('Username Roblox wajib diisi!');
+  document.getElementById('page1').classList.remove('active');
+  document.getElementById('page2').classList.add('active');
+}
+
+function randomNIK(){
+  let nik='5312';
+  const dd = String(Math.floor(Math.random()*28)+1).padStart(2,'0');
+  const mm = String(Math.floor(Math.random()*12)+1).padStart(2,'0');
+  const yy = String(Math.floor(Math.random()*30)+70);
+  nik+= yy + mm + dd;
+  for(let i=0;i<4;i++) nik+=Math.floor(Math.random()*10);
+  document.getElementById('nik').value=nik;
+}
+
+function generateKTP(){
+  const nik=document.getElementById('nik').value.trim();
+  const nama=document.getElementById('nama').value.trim();
+  const tmpt=document.getElementById('tmpt').value.trim();
+  const tgll=document.getElementById('tgllhr').value;
+  const jk=document.getElementById('jk').value;
+  const goldar=document.getElementById('goldar').value;
+  const alamat=document.getElementById('alamat').value.trim();
+  const rtrw=document.getElementById('rtrw').value.trim();
+  const kel=document.getElementById('keldesa').value.trim();
+  const kec=document.getElementById('kec').value.trim();
+  const agama=document.getElementById('agama').value;
+  const status=document.getElementById('status').value;
+  const kerja=document.getElementById('kerja').value.trim();
+  const kwn=document.getElementById('kwn').value;
+  const berlaku=document.getElementById('berlaku').value;
+  const file=document.getElementById('foto').files[0];
+
+  document.getElementById('outNIK').textContent=nik||'-';
+  document.getElementById('outNama').textContent=nama||'-';
+  document.getElementById('outLahir').textContent=tmpt+', '+(tgll?new Date(tgll).toLocaleDateString('id-ID'):'-');
+  document.getElementById('outJK').textContent=jk;
+  document.getElementById('outGol').textContent=goldar;
+  document.getElementById('outAlamat').textContent=alamat||'-';
+  document.getElementById('outRT').textContent=rtrw||'-';
+  document.getElementById('outKel').textContent=kel||'-';
+  document.getElementById('outKec').textContent=kec||'-';
+  document.getElementById('outAgama').textContent=agama;
+  document.getElementById('outStatus').textContent=status;
+  document.getElementById('outKerja').textContent=kerja||'-';
+  document.getElementById('outKWN').textContent=kwn;
+  document.getElementById('outBerlaku').textContent=berlaku;
+
+  if(file){
+    const r=new FileReader();
+    r.onload=e=>{
+      document.getElementById('outFoto').src=e.target.result;
+      showKTP();
+    };
+    r.readAsDataURL(file);
+  }else{
+    document.getElementById('outFoto').src='https://via.placeholder.com/280x350?text=Foto+wajah';
+    showKTP();
+  }
+}
+
+function showKTP(){
+  document.getElementById('page2').classList.remove('active');
+  document.getElementById('ktpResult').style.display='flex';
+}
+</script>
+
+</body>
+</html>
