@@ -1,0 +1,2 @@
+# buat-KTP-nezz
+odokd
